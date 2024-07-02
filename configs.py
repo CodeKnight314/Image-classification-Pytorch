@@ -18,20 +18,7 @@ img_width = 224
 
 transforms = None
 
-model_save_path = None
-
 batch_size = 64
-
-warm_up_epochs = 10
-epochs = 125
-
-ViT_layers = 12
-ViT_d_model = 768
-ViT_head = 12
-
-lr = 1e-4
-
-weight_decay = 1e-4
 
 base_path = os.getcwd()
 prefix = "Trial"
@@ -46,9 +33,6 @@ num_class = None
 id_to_category_dict = None
 
 category_to_id_dict = None
-
-#Available Options: ViT, ResNet18, ResNet34
-model = "ResNet18"
 
 def trial_directory(): 
     if not os.path.exists(log_output_dir): 
