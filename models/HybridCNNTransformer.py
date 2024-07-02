@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn 
 from typing import Tuple
 from ViT import EncoderBlock, PatchEmbeddingConv
+import configs
 
 class CNNBackbone(nn.Module): 
     def __init__(self, input_channels, output_size = (128, 128)):
@@ -70,3 +71,19 @@ class HybridCNNTransformer(nn.Module):
         x = self.encoder_stack(x)
 
         return self.classifier(x[:, 0, :])
+    
+def get_HCViT(input_channels : int = 3, 
+              cnn_output_size : Tuple[int] = (64, 64),
+              d_model : int = 512,
+              patch_size : int = 8,
+              head : int = 12, 
+              num_layers = 12, 
+              num_classes : int = configs.num_class, 
+              device: str = configs.device) -> HybridCNNTransformer:
+    """
+    Helper Function for getting Hybrid CNN Transformer with configured parameters.
+
+    Returns:
+        HybridCNNTransformer: HCViT with configured parameters
+    """
+    return HybridCNNTransformer(input_channels=input_channels, cnn_output_size=cnn_output_size, d_model=d_model, patch_size=patch_size, head=head, num_layers=num_layers, num_classes=num_classes).to(device)
