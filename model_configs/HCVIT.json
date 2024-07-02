@@ -1,0 +1,15 @@
+{
+    "cnn_output_size":[64,64],
+    "d_model":512, 
+    "patch_size":8, 
+    "head":12, 
+    "num_layers":12,
+    "optimizer": "AdamW",
+    "lr":1e-3, 
+    "weight decay":1e-4,
+    "scheduler": "CosineAnnealingLR",
+    "epochs": 300,
+    "warmup": 10,
+    "t_max": 190,
+    "eta_min": 1e-6
+}
