@@ -1,6 +1,5 @@
 import argparse
-from models.ViT import get_ViT
-from models.ResNet import get_ResNet18, get_ResNet34
+from models import ResNet, ViT, HybridCNNTransformer
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -102,7 +101,7 @@ def main():
     print("[INFO] Cross Entropy Function loaded.")
 
     if args.model == "ViT":
-        model = get_ViT(input_dim=(3, configs.img_height, configs.img_width),
+        model = ViT.get_ViT(input_dim=(3, configs.img_height, configs.img_width),
                         patch_size=model_config.get("patch_size"), 
                         layers=model_config.get("layers"), 
                         d_model=model_config.get("d_model"), 
@@ -114,15 +113,28 @@ def main():
         print(f"[INFO] * Model dimension: {model.d_model}.")
         print(f"[INFO] * Number of attention heads: {model.head}.")
     elif args.model == "ResNet18":
-        model = get_ResNet18(num_classes=configs.num_class)
+        model = ResNet.get_ResNet18(num_classes=configs.num_class)
         print("[INFO] ResNet18 Model loaded with the following attributes:")
         print(f"[INFO] * Channels: {model.channels}")
         print(f"[INFO] * Layers: {model.num_layers}")
     elif args.model == "ResNet34":
-        model = get_ResNet34(num_classes=configs.num_class)
+        model = ResNet.get_ResNet34(num_classes=configs.num_class)
         print("[INFO] ResNet34 Model loaded with the following attributes:")
         print(f"[INFO] * Channels: {model.channels}")
         print(f"[INFO] * Layers: {model.num_layers}")
+    elif args.model == "HCVIT": 
+        model = HybridCNNTransformer.get_HCViT(cnn_output_size=model_config.get("cnn_output_size"),
+                                               d_model=model_config.get("d_model"),
+                                               patch_size=model_config.get("patch_size"),
+                                               head=model_config.get("head"), 
+                                               num_layers=model_config.get("num_layers"), 
+                                               num_classes=configs.num_class)
+        print("[INFO] HCViT loaded with the following attributes: ")
+        print(f"[INFO] * CNN Output Shape: {model_config.get('cnn_output_size')}")
+        print(f"[INFO] * d_model: {model_config.get('d_model')}")
+        print(f"[INFO] * Patch size: {model_config.get('patch_size')}")
+        print(f"[INFO] * Number of attention heads: {model_config.get("head")}")
+        print(f"[INFO] * Number of layers: {model_config.get('num_layers')}")
 
     if args.model_save_path:
         print("[INFO] Model weights provided. Loading model weights.")
