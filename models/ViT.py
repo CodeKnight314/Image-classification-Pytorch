@@ -2,11 +2,6 @@ import torch
 import torch.nn as nn 
 from typing import Union, Tuple
 import math 
-import configs 
-from loss import *
-from dataset import *
-import optuna
-from tqdm import tqdm
 
 class PatchEmbeddingConv(nn.Module):
     def __init__(self, input_channels: int = 3, patch_size: int = 8, d_model: int = 512):
@@ -212,12 +207,12 @@ class ViT(nn.Module):
 
         return self.classifier_head(x[:, 0, :])
     
-def get_ViT(input_dim: Tuple[int] = (3, configs.img_height, configs.img_width), 
+def get_ViT(input_dim: Tuple[int] = (3, 224, 224), 
             patch_size=8, 
             layers: int = 12, 
             d_model : int = 512, 
             head : int = 8,
-            num_classes = configs.num_class, device: str = configs.device) -> ViT:
+            num_classes : int = 10, device: str = "cuda") -> ViT:
     """
     Helper function for getting VIT with configured parameters.
 

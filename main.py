@@ -82,7 +82,7 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
 
 def main():
     parser = argparse.ArgumentParser(description='Train a model on CIFAR-10')
-    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34'], help='Model name')
+    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34','HCVIT'], help='Model name')
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
     parser.add_argument('--config_file', type=str, required=True, default='config.json', help='Path to configuration file')
@@ -133,7 +133,7 @@ def main():
         print(f"[INFO] * CNN Output Shape: {model_config.get('cnn_output_size')}")
         print(f"[INFO] * d_model: {model_config.get('d_model')}")
         print(f"[INFO] * Patch size: {model_config.get('patch_size')}")
-        print(f"[INFO] * Number of attention heads: {model_config.get("head")}")
+        print(f"[INFO] * Number of attention heads: {model_config.get('head')}")
         print(f"[INFO] * Number of layers: {model_config.get('num_layers')}")
 
     if args.model_save_path:

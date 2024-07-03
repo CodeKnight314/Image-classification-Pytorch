@@ -1,8 +1,7 @@
 import torch 
 import torch.nn as nn 
 from typing import Tuple
-from ViT import EncoderBlock, PatchEmbeddingConv
-import configs
+from .ViT import PatchEmbeddingConv, EncoderBlock
 
 class CNNBackbone(nn.Module): 
     def __init__(self, input_channels, output_size = (128, 128)):
@@ -16,14 +15,13 @@ class CNNBackbone(nn.Module):
 
         self.relu = nn.ReLU()
 
-    def foward(self, x): 
+    def forward(self, x): 
         out1 = self.conv_1(x)
         out1 = self.relu(out1)
-        out2 = self.conv_2(x)
+        out2 = self.conv_2(out1)
         out2 = self.relu(out2)
-        out3 = self.conv_3(x)
+        out3 = self.conv_3(out2)
         out3 = self.relu(out3)
-
         output = self.pooling(out3)
 
         return output
@@ -78,8 +76,8 @@ def get_HCViT(input_channels : int = 3,
               patch_size : int = 8,
               head : int = 12, 
               num_layers = 12, 
-              num_classes : int = configs.num_class, 
-              device: str = configs.device) -> HybridCNNTransformer:
+              num_classes : int = 10, 
+              device: str = "cuda") -> HybridCNNTransformer:
     """
     Helper Function for getting Hybrid CNN Transformer with configured parameters.
 

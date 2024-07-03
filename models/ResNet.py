@@ -4,9 +4,6 @@ import optuna
 from dataset import *
 from loss import * 
 from tqdm import tqdm 
-import configs
-
-device = configs.device
 
 class ResBlock(nn.Module): 
     def __init__(self, input_channels: int, output_channels: int, stride: int): 
@@ -54,7 +51,7 @@ class ResStack(nn.Module):
         return self.block(x)
 
 class ResNet(nn.Module): 
-    def __init__(self, channels = [64, 128, 256, 512], num_layers = [3, 4, 6, 3], num_classes : int = configs.num_class):
+    def __init__(self, channels = [64, 128, 256, 512], num_layers = [3, 4, 6, 3], num_classes : int = 10):
         super().__init__()
 
         assert len(channels) == len(num_layers), "[ERROR] Channels and Layers lists do not match in length."
@@ -86,7 +83,7 @@ class ResNet(nn.Module):
 
         return logits
     
-def get_ResNet18(num_classes: int = configs.num_class, device : str = configs.device) -> ResNet: 
+def get_ResNet18(num_classes: int = 10, device : str = "cuda") -> ResNet: 
     """
     Helper function for getting ResNet18
 
@@ -95,7 +92,7 @@ def get_ResNet18(num_classes: int = configs.num_class, device : str = configs.de
     """
     return ResNet(channels=[64, 128, 256, 512], num_layers=[2, 2, 2, 2], num_classes=num_classes).to(device)
 
-def get_ResNet34(num_classes: int = configs.num_class, device : str = configs.device) -> ResNet:
+def get_ResNet34(num_classes: int = 10, device : str = "cuda") -> ResNet:
     """
     Helper function for getting ResNet34
 
