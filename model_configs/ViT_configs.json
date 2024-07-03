@@ -4,10 +4,10 @@
     "d_model": 512,
     "head": 8,
     "optimizer": "AdamW",
-    "lr":1e-2, 
-    "weight decay":1e-3,
+    "lr":1e-3, 
+    "weight decay":1e-4,
     "scheduler": "CosineAnnealingLR",
-    "epochs": 300,
+    "epochs": 200,
     "warmup": 10,
     "t_max": 190,
     "eta_min": 1e-6

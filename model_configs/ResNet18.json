@@ -3,7 +3,7 @@
     "lr":1e-3,
     "weight decay":1e-3,
     "scheduler":"StepLR",
-    "step_size":15,
+    "step_size":30,
     "gamma":0.1,
     "epochs":100,
     "warmup":0
