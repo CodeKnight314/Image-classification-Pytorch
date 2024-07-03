@@ -5,6 +5,8 @@ This repository is built for educational purposes on image classification using 
 
 If you have any suggestions, feel free to email me: richardgtang@gmail.com
 
+Note: All pretrained models are done on ImageNet100 due to resource constraints with stored default configs. Download link of ImageNet100 dataset can be found here.
+
 ## Results
 -MNIST
 | Model | Accuracy |
