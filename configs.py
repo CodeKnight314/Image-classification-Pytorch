@@ -18,7 +18,7 @@ img_width = 224
 
 transforms = None
 
-batch_size = 64
+batch_size = 128
 
 base_path = os.getcwd()
 prefix = "Trial"
