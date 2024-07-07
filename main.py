@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, HybridCNNTransformer
+from models import ResNet, ViT, HybridCNNTransformer, MobileNet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -82,7 +82,7 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
 
 def main():
     parser = argparse.ArgumentParser(description='Train a model on CIFAR-10')
-    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34','HCVIT'], help='Model name')
+    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34','HCVIT', 'MobileNet'], help='Model name')
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
     parser.add_argument('--config_file', type=str, required=True, default='config.json', help='Path to configuration file')
@@ -135,7 +135,10 @@ def main():
         print(f"[INFO] * Patch size: {model_config.get('patch_size')}")
         print(f"[INFO] * Number of attention heads: {model_config.get('head')}")
         print(f"[INFO] * Number of layers: {model_config.get('num_layers')}")
-
+    elif args.model == "MobileNet":
+        model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
+        print("[INFO] MobileNet loaded with defined parameters.")
+    
     if args.model_save_path:
         print("[INFO] Model weights provided. Loading model weights.")
         model.load_state_dict(torch.load(args.model_save_path))
