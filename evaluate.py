@@ -6,6 +6,7 @@ from tqdm import tqdm
 from utils.visualization import * 
 from torch.utils.data import DataLoader 
 from sklearn.metrics import precision_score, recall_score, accuracy_score, roc_curve, auc
+from sklearn.preprocessing import label_binarize
 from dataset import load_dataset
 from models import ResNet, ViT, HybridCNNTransformer, MobileNet
 import configs
@@ -13,64 +14,39 @@ import json
 
 device = configs.device
 
-def load_config(config_file):
+def load_config(config_file: str) -> dict:
+    """
+    Load configuration from a JSON file.
+    
+    Args:
+        config_file (str): Path to the configuration file.
+        
+    Returns:
+        dict: Configuration dictionary.
+    """
     with open(config_file, 'r') as f:
         config = json.load(f)
     return config
 
-def binarize_labels(labels, num_classes): 
+def ROC_AUC_Curve_plot(labels: np.ndarray, logits: np.ndarray, num_classes: int, output_dir: str):
     """
-    Assumes labels is 1D
-    """
-    matrix = np.zeros((labels.shape[0], num_classes))
-    for i, label in enumerate(labels):  # Fix variable name
-        matrix[i][label] = 1  # Fix indexing
-    return matrix
-
-def compute_tpr_fpr(labels_sorted, scores_sorted): 
-    """
-    Compute TPR and FPR given sorted labels and scores.
-    """
-    tpr = [] 
-    fpr = [] 
-    pos_count = np.sum(labels_sorted)
-    neg_count = len(labels_sorted) - pos_count
-
-    tp = 0 
-    fp = 0 
-
-    for threshold in np.unique(scores_sorted):
-        tp = np.sum((scores_sorted >= threshold) & (labels_sorted == 1))
-        fp = np.sum((scores_sorted >= threshold) & (labels_sorted == 0))
-        
-        tpr.append(tp / pos_count)
-        fpr.append(fp / neg_count)
+    Plot ROC curves and compute AUC for each class using scikit-learn.
     
-    return np.array(tpr), np.array(fpr)
-
-def compute_auc(fpr, tpr):
+    Args:
+        labels (np.ndarray): True labels, shape (n_samples,).
+        logits (np.ndarray): Predicted logits, shape (n_samples, num_classes).
+        num_classes (int): Number of classes.
+        output_dir (str): Directory to save the ROC curve plots.
     """
-    Compute AUC using the trapezoidal rule.
-    """
-    return np.trapz(tpr, fpr)
-
-def ROC_AUC_Curve_plot(labels, logits, num_classes, output_dir):
-    """
-    Plot ROC curves and compute AUC for each class.
-    """
-    binary_labels = binarize_labels(labels=labels, num_classes=num_classes)
+    binary_labels = label_binarize(labels, classes=range(num_classes))
     
     fpr = {}
     tpr = {}
     roc_auc = {}
 
-    for i in range(num_classes): 
-        scores_sorted = np.sort(logits[:, i])[::-1]
-        sorted_indices = np.argsort(logits[:, i])[::-1]
-        labels_sorted = binary_labels[sorted_indices, i]
-
-        fpr[i], tpr[i] = compute_tpr_fpr(labels_sorted=labels_sorted, scores_sorted=scores_sorted)
-        roc_auc[i] = compute_auc(fpr=fpr[i], tpr=tpr[i])
+    for i in range(num_classes):
+        fpr[i], tpr[i], _ = roc_curve(binary_labels[:, i], logits[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
 
         plt.figure(figsize=(10, 8))
         plt.plot(fpr[i], tpr[i], label=f'Class {i} (area = {roc_auc[i]:.2f})')
@@ -85,7 +61,15 @@ def ROC_AUC_Curve_plot(labels, logits, num_classes, output_dir):
         plt.savefig(os.path.join(output_dir, f'roc_curve_class_{i}.png'))
         plt.close()
 
-def calculate_metrics(y_true, y_pred, output_dir):
+def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray, output_dir: str):
+    """
+    Calculate precision, recall, and F1 score for each class and save the metrics to a file.
+    
+    Args:
+        y_true (np.ndarray): True labels, shape (n_samples,).
+        y_pred (np.ndarray): Predicted labels, shape (n_samples,).
+        output_dir (str): Directory to save the class metrics.
+    """
     classes = np.unique(y_true)
     metrics = []
 
@@ -93,25 +77,30 @@ def calculate_metrics(y_true, y_pred, output_dir):
         y_true_bin = (y_true == cls).astype(int)
         y_pred_bin = (y_pred == cls).astype(int)
         
-        accuracy = accuracy_score(y_true_bin, y_pred_bin)
-        precision = precision_score(y_true_bin, y_pred_bin, zero_division=0)
-        recall = recall_score(y_true_bin, y_pred_bin, zero_division=0)
+        tp = np.sum((y_true_bin == 1) & (y_pred_bin == 1))
+        tn = np.sum((y_true_bin == 0) & (y_pred_bin == 0))
+        fp = np.sum((y_true_bin == 0) & (y_pred_bin == 1))
+        fn = np.sum((y_true_bin == 1) & (y_pred_bin == 0))
+
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
         
-        metrics.append(f'Class {cls}: Accuracy = {accuracy:.2f}, Precision = {precision:.2f}, Recall = {recall:.2f}')
+        metrics.append(f'Class {cls}: Precision = {precision:.2f}, Recall = {recall:.2f}, F1 Score = {f1_score:.2f}')
 
     output_file = os.path.join(output_dir, 'class_metrics.txt')
     with open(output_file, 'w') as f:
         for metric in metrics:
             f.write(metric + '\n')
 
-def evaluation(model : nn.Module, valid_dl : DataLoader, output_directory : str):
+def evaluation(model: nn.Module, valid_dl: DataLoader, output_directory: str):
     """
-    Evaluation of model on image classification. 
-
-    Args: 
-        model (nn.Module): Model to evaluate on image classification. 
-        valid_dl (DataLoader): Dataloader of the validation or test dataset for evaluation. 
-        output_directory (str): Path to output heatmaps and confusion matrices.
+    Evaluate the model on image classification and save various metrics and plots.
+    
+    Args:
+        model (nn.Module): Model to evaluate.
+        valid_dl (DataLoader): DataLoader for the validation or test dataset.
+        output_directory (str): Path to output heatmaps, confusion matrices, and other metrics.
     """
     model.eval()
 
@@ -148,7 +137,7 @@ def evaluation(model : nn.Module, valid_dl : DataLoader, output_directory : str)
     ROC_AUC_Curve_plot(all_labels, all_logits, num_classes=num_classes, output_dir=output_directory)
 
     # Class specific validation: 
-    calculate_metrics(all_labels, all_logits, output_dir=output_directory)
+    calculate_metrics(all_labels, all_preds, output_dir=output_directory)
 
     # Confusion Matrix
     if(num_classes > 10):
@@ -251,5 +240,3 @@ if __name__ == "__main__":
         model.load_state_dict(torch.load(args.model_save_path))
 
     evaluation(model, valid_dl=valid_dl, output_directory=args.output_dir)
-
-    
