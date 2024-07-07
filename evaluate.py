@@ -73,6 +73,8 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray, output_dir: str):
     classes = np.unique(y_true)
     metrics = []
 
+    metrics_dict = {}
+
     for cls in classes:
         y_true_bin = (y_true == cls).astype(int)
         y_pred_bin = (y_pred == cls).astype(int)
@@ -88,10 +90,48 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray, output_dir: str):
         
         metrics.append(f'Class {cls}: Precision = {precision:.2f}, Recall = {recall:.2f}, F1 Score = {f1_score:.2f}')
 
+        metrics_dict[cls] = [precision, recall, f1_score]
+
     output_file = os.path.join(output_dir, 'class_metrics.txt')
     with open(output_file, 'w') as f:
         for metric in metrics:
             f.write(metric + '\n')
+
+    cls_names = list(metrics_dict.keys())
+    precisions = [metrics_dict[cls][0] for cls in classes]
+    recalls = [metrics_dict[cls][1] for cls in classes]
+    f1_scores = [metrics_dict[cls][2] for cls in classes]
+
+
+    # Plot Precision
+    plt.figure(figsize=(10, 8))
+    plt.barh(classes, precisions, color='b', align='center')
+    plt.xlabel('Precision')
+    plt.ylabel('Class')
+    plt.title('Class-wise Precision')
+    plt.yticks(classes)
+    plt.savefig(os.path.join(output_dir, 'precision.png'))
+    plt.close()
+
+    # Plot Recall
+    plt.figure(figsize=(10, 8))
+    plt.barh(classes, recalls, color='g', align='center')
+    plt.xlabel('Recall')
+    plt.ylabel('Class')
+    plt.title('Class-wise Recall')
+    plt.yticks(classes)
+    plt.savefig(os.path.join(output_dir, 'recall.png'))
+    plt.close()
+
+    # Plot F1 Score
+    plt.figure(figsize=(10, 8))
+    plt.barh(classes, f1_scores, color='r', align='center')
+    plt.xlabel('F1 Score')
+    plt.ylabel('Class')
+    plt.title('Class-wise F1 Score')
+    plt.yticks(classes)
+    plt.savefig(os.path.join(output_dir, 'f1_score.png'))
+    plt.close()
 
 def evaluation(model: nn.Module, valid_dl: DataLoader, output_directory: str):
     """
