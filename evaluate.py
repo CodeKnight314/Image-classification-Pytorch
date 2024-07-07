@@ -5,14 +5,18 @@ import os
 from tqdm import tqdm
 from utils.visualization import * 
 from torch.utils.data import DataLoader 
-from loss import CrossEntropyLoss
 from sklearn.metrics import precision_score, recall_score, accuracy_score, roc_curve, auc
 from dataset import load_dataset
-from models.ResNet import get_ResNet18, get_ResNet34
-from models.ViT import get_ViT
+from models import ResNet, ViT, HybridCNNTransformer, MobileNet
 import configs
+import json
 
 device = configs.device
+
+def load_config(config_file):
+    with open(config_file, 'r') as f:
+        config = json.load(f)
+    return config
 
 def binarize_labels(labels, num_classes): 
     """
@@ -81,6 +85,25 @@ def ROC_AUC_Curve_plot(labels, logits, num_classes, output_dir):
         plt.savefig(os.path.join(output_dir, f'roc_curve_class_{i}.png'))
         plt.close()
 
+def calculate_metrics(y_true, y_pred, output_dir):
+    classes = np.unique(y_true)
+    metrics = []
+
+    for cls in classes:
+        y_true_bin = (y_true == cls).astype(int)
+        y_pred_bin = (y_pred == cls).astype(int)
+        
+        accuracy = accuracy_score(y_true_bin, y_pred_bin)
+        precision = precision_score(y_true_bin, y_pred_bin, zero_division=0)
+        recall = recall_score(y_true_bin, y_pred_bin, zero_division=0)
+        
+        metrics.append(f'Class {cls}: Accuracy = {accuracy:.2f}, Precision = {precision:.2f}, Recall = {recall:.2f}')
+
+    output_file = os.path.join(output_dir, 'class_metrics.txt')
+    with open(output_file, 'w') as f:
+        for metric in metrics:
+            f.write(metric + '\n')
+
 def evaluation(model : nn.Module, valid_dl : DataLoader, output_directory : str):
     """
     Evaluation of model on image classification. 
@@ -123,6 +146,9 @@ def evaluation(model : nn.Module, valid_dl : DataLoader, output_directory : str)
 
     # ROC & AUC
     ROC_AUC_Curve_plot(all_labels, all_logits, num_classes=num_classes, output_dir=output_directory)
+
+    # Class specific validation: 
+    calculate_metrics(all_labels, all_logits, output_dir=output_directory)
 
     # Confusion Matrix
     if(num_classes > 10):
@@ -167,31 +193,63 @@ def evaluation(model : nn.Module, valid_dl : DataLoader, output_directory : str)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34'], help='Model name')
-    parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights.')
+    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34','HCVIT', 'MobileNet'], help='Model name')
+    parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
+    parser.add_argument('--config_file', type=str, required=True, default='config.json', help='Path to configuration file')
     parser.add_argument('--output_dir', type=str, required=True, help="Path to output confusion matrix and attention maps.")
 
     args = parser.parse_args()
 
-    valid_dl = load_dataset(root_dir=args.root_dir, mode="val") 
-    print("[INFO] Evaluation dataset constructed.")
+    valid_dl = load_dataset(root_dir=args.root_dir, mode="val", batch_size=1) 
+    
+    print("[INFO] Evaluation dataset defined.")
+    
+    model_config = load_config(args.config_file)
+    
     if args.model == "ViT":
-        model = get_ViT(patch_size=args.patch_size, num_classes=configs.num_class)
+        model = ViT.get_ViT(input_dim=(3, configs.img_height, configs.img_width),
+                        patch_size=model_config.get("patch_size"), 
+                        layers=model_config.get("layers"), 
+                        d_model=model_config.get("d_model"), 
+                        head=model_config.get("head"), 
+                        num_classes=configs.num_class)
         print("[INFO] ViT Model loaded with the following attributes:")
         print(f"[INFO] * Patch size: {model.patch_size}.")
         print(f"[INFO] * Number of layers: {model.layers}.")
         print(f"[INFO] * Model dimension: {model.d_model}.")
         print(f"[INFO] * Number of attention heads: {model.head}.")
     elif args.model == "ResNet18":
-        model = get_ResNet18(num_classes=configs.num_class)
+        model = ResNet.get_ResNet18(num_classes=configs.num_class)
         print("[INFO] ResNet18 Model loaded with the following attributes:")
         print(f"[INFO] * Channels: {model.channels}")
         print(f"[INFO] * Layers: {model.num_layers}")
     elif args.model == "ResNet34":
-        model = get_ResNet34(num_classes=configs.num_class)
+        model = ResNet.get_ResNet34(num_classes=configs.num_class)
         print("[INFO] ResNet34 Model loaded with the following attributes:")
         print(f"[INFO] * Channels: {model.channels}")
         print(f"[INFO] * Layers: {model.num_layers}")
+    elif args.model == "HCVIT": 
+        model = HybridCNNTransformer.get_HCViT(cnn_output_size=model_config.get("cnn_output_size"),
+                                               d_model=model_config.get("d_model"),
+                                               patch_size=model_config.get("patch_size"),
+                                               head=model_config.get("head"), 
+                                               num_layers=model_config.get("num_layers"), 
+                                               num_classes=configs.num_class)
+        print("[INFO] HCViT loaded with the following attributes: ")
+        print(f"[INFO] * CNN Output Shape: {model_config.get('cnn_output_size')}")
+        print(f"[INFO] * d_model: {model_config.get('d_model')}")
+        print(f"[INFO] * Patch size: {model_config.get('patch_size')}")
+        print(f"[INFO] * Number of attention heads: {model_config.get('head')}")
+        print(f"[INFO] * Number of layers: {model_config.get('num_layers')}")
+    elif args.model == "MobileNet":
+        model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
+        print("[INFO] MobileNet loaded with defined parameters.")
+    
+    if args.model_save_path:
+        print("[INFO] Model weights provided. Loading model weights.")
+        model.load_state_dict(torch.load(args.model_save_path))
+
+    evaluation(model, valid_dl=valid_dl, output_directory=args.output_dir)
 
     
