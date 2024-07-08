@@ -44,7 +44,7 @@ def ROC_AUC_Curve_plot(labels: np.ndarray, logits: np.ndarray, num_classes: int,
     tpr = {}
     roc_auc = {}
 
-    for i in range(num_classes):
+    for i in tqdm(range(num_classes), desc ="[ROC Curve plotting]"):
         fpr[i], tpr[i], _ = roc_curve(binary_labels[:, i], logits[:, i])
         roc_auc[i] = auc(fpr[i], tpr[i])
 
@@ -97,11 +97,9 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray, output_dir: str):
         for metric in metrics:
             f.write(metric + '\n')
 
-    cls_names = list(metrics_dict.keys())
     precisions = [metrics_dict[cls][0] for cls in classes]
     recalls = [metrics_dict[cls][1] for cls in classes]
     f1_scores = [metrics_dict[cls][2] for cls in classes]
-
 
     # Plot Precision
     plt.figure(figsize=(10, 8))
