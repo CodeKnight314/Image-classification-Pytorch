@@ -140,8 +140,19 @@ def main():
         print("[INFO] MobileNet loaded with defined parameters.")
     
     if args.model_save_path:
-        print("[INFO] Model weights provided. Loading model weights.")
-        model.load_state_dict(torch.load(args.model_save_path))
+        print("[INFO] Model weights provided. Attempting to load model weights.")
+        try:
+            model.load_state_dict(torch.load(args.model_save_path), strict=False)
+            print("[INFO] Model weights loaded successfully with strict=False.")
+        except RuntimeError as e:
+            print(f"[WARNING] Runtime error occurred while loading some model weights: {e}")
+        except FileNotFoundError as e:
+            print(f"[ERROR] File not found error occurred: {e}")
+        except Exception as e:
+            print(f"[ERROR] An unexpected error occurred while loading model weights: {e}")
+    else:
+        print("[INFO] No model weights path provided. Training from scratch.")
+            
     
     if model_config.get("optimizer") == 'AdamW':
         optimizer = opt.AdamW(model.parameters(), lr=model_config.get("lr"), weight_decay=model_config.get("weight decay"))
