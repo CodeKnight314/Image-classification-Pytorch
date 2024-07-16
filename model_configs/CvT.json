@@ -1,0 +1,10 @@
+{
+    "optimizer":"AdamW", 
+    "lr":2e-2, 
+    "weight decay":5e-2,
+    "scheduler":"CosineAnnealingLR",
+    "t_max":160,
+    "eta_min":2e-5,
+    "epochs":300,
+    "warmup":10
+}
