@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, HybridCNNTransformer, MobileNet
+from models import ResNet, ViT, CvT, MobileNet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -17,6 +17,56 @@ def load_config(config_file):
     with open(config_file, 'r') as f:
         config = json.load(f)
     return config
+
+def load_model(args, model_config):
+    # Model selection
+    if args.model == "ViT":
+        model = ViT.get_ViT(input_dim=(3, configs.img_height, configs.img_width),
+                        patch_size=model_config.get("patch_size"), 
+                        layers=model_config.get("layers"), 
+                        d_model=model_config.get("d_model"), 
+                        head=model_config.get("head"), 
+                        num_classes=configs.num_class)
+        print("[INFO] ViT Model loaded with the following attributes:")
+        print(f"[INFO] * Patch size: {model.patch_size}.")
+        print(f"[INFO] * Number of layers: {model.layers}.")
+        print(f"[INFO] * Model dimension: {model.d_model}.")
+        print(f"[INFO] * Number of attention heads: {model.head}.")
+    elif args.model == "ResNet18":
+        model = ResNet.get_ResNet18(num_classes=configs.num_class)
+        print("[INFO] ResNet18 Model loaded with defined parameters")
+    elif args.model == "ResNet34":
+        model = ResNet.get_ResNet34(num_classes=configs.num_class)
+        print("[INFO] ResNet34 Model loaded with defined parameters")
+    elif args.model == "CvT-13": 
+        model = CvT.get_CVT13(num_classes=configs.num_class)
+        print("[INFO] CvT-13 Model loaded with defined parameters")
+    elif args.model == "CvT-21": 
+        model = CvT.get_CVT21(num_classes=configs.num_class)
+        print("[INFO] CvT-21 Model loaded with defined parameters")
+    elif args.model == "CvT-24":
+        model = CvT.get_CVTW24(num_classes=configs.num_class)
+        print("[INFO] CvT-24 Model loaded with defined parameters")
+    elif args.model == "MobileNet":
+        model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
+        print("[INFO] MobileNet loaded with defined parameters.")
+
+    # Weights loading
+    if args.model_save_path:
+        print("[INFO] Model weights provided. Attempting to load model weights.")
+        try:
+            model.load_state_dict(torch.load(args.model_save_path), strict=False)
+            print("[INFO] Model weights loaded successfully with strict=False.")
+        except RuntimeError as e:
+            print(f"[WARNING] Runtime error occurred while loading some model weights: {e}")
+        except FileNotFoundError as e:
+            print(f"[ERROR] File not found error occurred: {e}")
+        except Exception as e:
+            print(f"[ERROR] An unexpected error occurred while loading model weights: {e}")
+    else:
+        print("[INFO] No model weights path provided. Training from scratch.")
+
+    return model
 
 def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss_fn, epochs, warmup, device='cuda'):
     best_loss = float('inf')
@@ -100,60 +150,8 @@ def main():
     loss_fn = torch.nn.CrossEntropyLoss()
     print("[INFO] Cross Entropy Function loaded.")
 
-    if args.model == "ViT":
-        model = ViT.get_ViT(input_dim=(3, configs.img_height, configs.img_width),
-                        patch_size=model_config.get("patch_size"), 
-                        layers=model_config.get("layers"), 
-                        d_model=model_config.get("d_model"), 
-                        head=model_config.get("head"), 
-                        num_classes=configs.num_class)
-        print("[INFO] ViT Model loaded with the following attributes:")
-        print(f"[INFO] * Patch size: {model.patch_size}.")
-        print(f"[INFO] * Number of layers: {model.layers}.")
-        print(f"[INFO] * Model dimension: {model.d_model}.")
-        print(f"[INFO] * Number of attention heads: {model.head}.")
-    elif args.model == "ResNet18":
-        model = ResNet.get_ResNet18(num_classes=configs.num_class)
-        print("[INFO] ResNet18 Model loaded with the following attributes:")
-        print(f"[INFO] * Channels: {model.channels}")
-        print(f"[INFO] * Layers: {model.num_layers}")
-    elif args.model == "ResNet34":
-        model = ResNet.get_ResNet34(num_classes=configs.num_class)
-        print("[INFO] ResNet34 Model loaded with the following attributes:")
-        print(f"[INFO] * Channels: {model.channels}")
-        print(f"[INFO] * Layers: {model.num_layers}")
-    elif args.model == "HCVIT": 
-        model = HybridCNNTransformer.get_HCViT(cnn_output_size=model_config.get("cnn_output_size"),
-                                               d_model=model_config.get("d_model"),
-                                               patch_size=model_config.get("patch_size"),
-                                               head=model_config.get("head"), 
-                                               num_layers=model_config.get("num_layers"), 
-                                               num_classes=configs.num_class)
-        print("[INFO] HCViT loaded with the following attributes: ")
-        print(f"[INFO] * CNN Output Shape: {model_config.get('cnn_output_size')}")
-        print(f"[INFO] * d_model: {model_config.get('d_model')}")
-        print(f"[INFO] * Patch size: {model_config.get('patch_size')}")
-        print(f"[INFO] * Number of attention heads: {model_config.get('head')}")
-        print(f"[INFO] * Number of layers: {model_config.get('num_layers')}")
-    elif args.model == "MobileNet":
-        model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
-        print("[INFO] MobileNet loaded with defined parameters.")
-    
-    if args.model_save_path:
-        print("[INFO] Model weights provided. Attempting to load model weights.")
-        try:
-            model.load_state_dict(torch.load(args.model_save_path), strict=False)
-            print("[INFO] Model weights loaded successfully with strict=False.")
-        except RuntimeError as e:
-            print(f"[WARNING] Runtime error occurred while loading some model weights: {e}")
-        except FileNotFoundError as e:
-            print(f"[ERROR] File not found error occurred: {e}")
-        except Exception as e:
-            print(f"[ERROR] An unexpected error occurred while loading model weights: {e}")
-    else:
-        print("[INFO] No model weights path provided. Training from scratch.")
-            
-    
+    model = load_model(args, model_config)
+                
     if model_config.get("optimizer") == 'AdamW':
         optimizer = opt.AdamW(model.parameters(), lr=model_config.get("lr"), weight_decay=model_config.get("weight decay"))
     elif model_config.get("optimizer") == 'SGD':
