@@ -8,8 +8,30 @@ If you have any suggestions, feel free to email me: richardgtang@gmail.com
 Note: All pretrained models are done on ImageNet100 due to resource constraints with stored default configs. Download link of ImageNet100 dataset can be found here.
 
 ## Results
--MNIST
-| Model | Accuracy |
-|-------|----------|
-| ViT   | 94.3%    |
-| ResNet| 98.3%    |
+| Model         | ImageNet100 (Accuracy/Precision/Recall)       | CIFAR-10 (Accuracy/Precision/Recall)          | MNIST (Accuracy/Precision/Recall)           |
+|---------------|:---------------------------------------------:|:---------------------------------------------:|:-------------------------------------------:|
+| ResNet18      |                78.9%/79.1%/78.9%              |                92.6%/92.6%/92.6%               |               97.0%/97.0%/97.0%             |
+| ResNet34      |                80.1%/80.3%/80.1%              |                94.5%/94.5%/94.5%               |               98.0%/98.0%/98.0%             |
+| MobileNet V.1 |                72.1%/72.3%/72.1%              |                92.2%/92.2%/92.2%               |               97.0%/97.0%/97.0%             |
+
+## Special note
+- While most models in this repository can be directly trained on image classification datasets, pretraining even on a subset of Imagenet yields significant benefit before proper training.
+
+## Usage
+- For training selected models, run the following after cloning the github repository:
+```python
+python main.py --model MODEL --root_dir ROOT_DIR --config_file CONFIG_FILE
+```
+
+- For evaluating selected models, run the following after cloning the github repository:
+```python
+python evaluate.py --model MODEL --model_save_path MODEL_PATH --root_dir ROOT_DIR --config_file CONFIG_FILE --output_dir OUTPUT_DIR
+```
+
+- To check arguement descriptions, run selected scripts with the `--help` flag.
+```python
+python evaluate.py --help
+```
+```python
+python main.py --help
+```
