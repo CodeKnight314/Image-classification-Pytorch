@@ -22,6 +22,21 @@ class CrossEntropyLoss(nn.Module):
         probs = F.log_softmax(logits, dim=-1)
         loss = -(probs[range(logits.shape[0]), labels] + 1e-9)
         return loss.mean()
+    
+class LabelSmoothingLoss(nn.Module):
+    def __init__(self, classes, smoothing=0.1):
+        super(LabelSmoothingLoss, self).__init__()
+        self.classes = classes
+        self.smoothing = smoothing
+        self.confidence = 1.0 - smoothing
+    
+    def forward(self, x, target):
+        log_probs = torch.nn.functional.log_softmax(x, dim=-1)
+        with torch.no_grad():
+            true_dist = torch.zeros_like(log_probs)
+            true_dist.fill_(self.smoothing / (self.classes - 1))
+            true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence)
+        return torch.mean(torch.sum(-true_dist * log_probs, dim=-1))
 
 class BCELoss(nn.Module): 
     def __init__(self): 
@@ -62,64 +77,3 @@ class HingeLoss(nn.Module):
         probs = torch.tanh(logits)
         loss = (1 - labels * probs).sum(dim=-1).mean().item()
         return max(0, loss)
-
-def get_SGD_optimizer(model, 
-                      lr : float, 
-                      momentum : Tuple[float], 
-                      weight_decay : float) -> torch.optim: 
-    """
-    Helper function for defining optimizer 
-
-    Args: 
-        model : the model associated with the given optimizer 
-        lr (float): learning rate for the optimizer 
-
-    Returns:
-        torch.optim : optimizer with the given parameters
-    """
-    return opt.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
-
-def get_AdamW_optimizer(model, 
-                        lr : float = 5e-4, 
-                        weight_decay : float = 1e-3) -> torch.optim: 
-    """
-    Helper function for defining AdamW optimizer 
-
-    Args: 
-        model : the model associated with the given optimizer 
-        lr (float): learning rate for the optimizer
-    
-    Returns:
-        torch.optim : optimizer with the given paramters
-    """
-    return opt.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
-
-def get_scheduler(optimizer: torch.optim.Optimizer, 
-                  mode: str = 'min', 
-                  factor: float = 0.1, 
-                  patience: int = 10, 
-                  verbose: bool = False, 
-                  threshold: float = 0.02, 
-                  threshold_mode: str = 'rel', 
-                  cooldown: int = 0,
-                  min_lr: float = 1e-6, 
-                  eps: float = 1e-8) -> torch.optim.lr_scheduler:
-    """
-    Helper function for defining a ReduceLROnPlateau learning rate scheduler.
-
-    Args:
-        optimizer (torch.optim.Optimizer): optimizer associated with the given learning rate scheduler.
-        mode (str): One of 'min', 'max'. In 'min' mode, the learning rate will be reduced when the quantity monitored has stopped decreasing; in 'max' mode it will be reduced when the quantity monitored has stopped increasing.
-        factor (float): Factor by which the learning rate will be reduced. new_lr = lr * factor.
-        patience (int): Number of epochs with no improvement after which learning rate will be reduced.
-        verbose (bool): If True, prints a message to stdout for each update.
-        threshold (float): Threshold for measuring the new optimum, to only focus on significant changes.
-        threshold_mode (str): One of 'rel', 'abs'. In 'rel' mode, dynamic_threshold = best * ( 1 + threshold ) in 'max' mode or best * ( 1 - threshold ) in 'min' mode. In 'abs' mode, dynamic_threshold = best + threshold in 'max' mode or best - threshold in 'min' mode.
-        cooldown (int): Number of epochs to wait before resuming normal operation after lr has been reduced.
-        min_lr (float or list): A scalar or a list of scalars. A lower bound on the learning rate of all param groups or each group respectively.
-        eps (float): Minimal decay applied to lr. If the difference between new and old lr is smaller than eps, the update is ignored.
-
-    Returns:
-        torch.optim.lr_scheduler.ReduceLROnPlateau: Initialized ReduceLROnPlateau scheduler.
-    """
-    return opt.lr_scheduler.ReduceLROnPlateau(optimizer, mode=mode, factor=factor, patience=patience, verbose=verbose, threshold=threshold, threshold_mode=threshold_mode, cooldown=cooldown, min_lr=min_lr, eps=eps)
