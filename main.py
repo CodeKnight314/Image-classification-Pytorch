@@ -81,6 +81,8 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
             outputs = model(images)
             loss = loss_fn(outputs, labels)
             loss.backward()
+
+            torch.nn.utils.clip_grad_norm(model.parameters(), max_norm=1.0)
             optimizer.step()
             total_train_loss += loss.item()
 
@@ -147,7 +149,7 @@ def main():
     print(f"[INFO] Validation Dataloader loaded with {len(valid_dl)} batches.")
     print(f"[INFO] Total number of classes: {configs.num_class}")
 
-    loss_fn = torch.nn.CrossEntropyLoss()
+    loss_fn = torch.nn.CrossEntropyLoss(label_smoothing=0.15)
     print("[INFO] Cross Entropy Function loaded.")
 
     model = load_model(args, model_config)
