@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, CvT, MobileNet
+from models import ResNet, ViT, CvT, MobileNet, Squeezenet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -50,6 +50,15 @@ def load_model(args, model_config):
     elif args.model == "MobileNet":
         model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
         print("[INFO] MobileNet loaded with defined parameters.")
+    elif args.model == "Squeezenetv1": 
+        model = Squeezenet.get_SqueezenetV1(num_classes=configs.num_class)
+        print("[INFO] Squeezenetv1 loaded with defined parameters")
+    elif args.model == "Squeezenetv2": 
+        model = Squeezenet.get_SqueezenetV2(num_classes=configs.num_class)
+        print("[INFO] Squeezenetv2 loaded with defined parameters")
+    elif args.model == "Squeezenetv3": 
+        model = Squeezenet.get_SqueezenetV3(num_classes=configs.num_class)
+        print("[INFO] Squeezenetv3 loaded with defined parameters")
 
     # Weights loading
     if args.model_save_path:
@@ -82,7 +91,7 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
             loss = loss_fn(outputs, labels)
             loss.backward()
 
-            torch.nn.utils.clip_grad_norm(model.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             total_train_loss += loss.item()
 
@@ -134,7 +143,17 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
 
 def main():
     parser = argparse.ArgumentParser(description='Train a model on CIFAR-10')
-    parser.add_argument('--model', type=str, required=True, choices=['ViT', 'ResNet18', 'ResNet34','CvT-13','CvT-21','CvT-24','MobileNet'], help='Model name')
+    parser.add_argument('--model', type=str, required=True, choices=['ViT', 
+                                                                     'ResNet18', 
+                                                                     'ResNet34',
+                                                                     'CvT-13',
+                                                                     'CvT-21',
+                                                                     'CvT-24',
+                                                                     'MobileNet',
+                                                                     'Squeezenetv1',
+                                                                     'Squeezenetv2',
+                                                                     'Squeezenetv3'], help='Model name')
+    
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
     parser.add_argument('--config_file', type=str, required=True, default='config.json', help='Path to configuration file')
