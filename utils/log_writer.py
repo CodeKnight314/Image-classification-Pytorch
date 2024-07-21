@@ -10,7 +10,7 @@ class LOGWRITER():
         log_files_count = len(glob(os.path.join(output_directory, "*.txt")))
         self.output_file_dir = os.path.join(self.output_dir, f"Log_{log_files_count}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt")
 
-    def write(self, epoch, **kwargs):
+    def log_results(self, epoch, **kwargs):
         """
         Logs the specified epoch's metrics and other key-value paired information to the log file.
 
@@ -26,6 +26,16 @@ class LOGWRITER():
             writer.write(log + "\n")
             writer.flush()
 
+    def write(self, str): 
+        """
+        Write selected lines printed from terminal 
+        """
+        with open(self.output_dir, 'a') as writer: 
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            writer.write(f"[{timestamp}] " + str + "\n")
+            writer.flush() 
+        print(str)
+
     def log_error(self, error_message):
         """
         Logs an error message with a timestamp to the log file, useful for recording exceptions or problems encountered
@@ -36,5 +46,7 @@ class LOGWRITER():
         """
         with open(self.output_file_dir, 'a') as writer:
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            log = f"[ERROR] [{timestamp}] {error_message}\n"
+            log = f"[{timestamp}] {error_message}\n"
             writer.write(log)
+            writer.flush()
+        print(error_message)
