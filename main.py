@@ -172,6 +172,8 @@ def main():
     
     model_config = load_config(args.config_file)
 
+    configs.trial_directory()
+
     logger = LOGWRITER(output_directory=configs.log_output_dir, total_epochs=model_config.get('epochs'))
     logger.write(f"[INFO] Log writer loaded and binded to {configs.log_output_dir}")
     logger.write(f"[INFO] Total epochs: {model_config.get('epochs')}")
@@ -199,8 +201,6 @@ def main():
     elif model_config.get("scheduler") == 'StepLR':
         scheduler = opt.lr_scheduler.StepLR(optimizer, step_size=model_config.get("step_size"), gamma=model_config.get("gamma"))
     logger.write(f"[INFO] {model_config.get('scheduler')} Scheduler loaded.")
-
-    configs.trial_directory()
 
     classification(model=model, 
                        optimizer=optimizer, 
