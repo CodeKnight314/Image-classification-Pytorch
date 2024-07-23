@@ -50,12 +50,6 @@ def load_model(args, model_config, logger):
     elif args.model == "MobileNet":
         model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
         logger.write("[INFO] MobileNet loaded with defined parameters.")
-    elif args.model == "Squeezenetv1": 
-        model = Squeezenet.get_SqueezenetV1(num_classes=configs.num_class)
-        logger.write("[INFO] Squeezenetv1 loaded with defined parameters")
-    elif args.model == "Squeezenetv2": 
-        model = Squeezenet.get_SqueezenetV2(num_classes=configs.num_class)
-        logger.write("[INFO] Squeezenetv2 loaded with defined parameters")
     elif args.model == "Squeezenetv3": 
         model = Squeezenet.get_SqueezenetV3(num_classes=configs.num_class)
         logger.write("[INFO] Squeezenetv3 loaded with defined parameters")
@@ -160,8 +154,6 @@ def main():
                                                                      'CvT-21',
                                                                      'CvT-24',
                                                                      'MobileNet',
-                                                                     'Squeezenetv1',
-                                                                     'Squeezenetv2',
                                                                      'Squeezenetv3'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
