@@ -13,7 +13,7 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | ResNet18      |                78.9%/79.1%/78.9%              |                92.6%/92.6%/92.6%               |               97.0%/97.0%/97.0%             |
 | ResNet34      |                80.1%/80.3%/80.1%              |                94.5%/94.5%/94.5%               |               98.0%/98.0%/98.0%             |
 | MobileNet V.1 |                72.1%/72.3%/72.1%              |                92.2%/92.2%/92.2%               |               97.0%/97.0%/97.0%             |
-| SqueezeNet V.3|                74.6%/74.9%/74.5%              |               78.3%/78.1%/78.3%                |               97.4%/97.4%/97.3%
+| SqueezeNet V.3|                74.6%/74.9%/74.5%              |               78.3%/78.1%/78.3%                |               97.4%/97.4%/97.3%             |
 ## Special note
 - While most models in this repository can be directly trained on image classification datasets, pretraining even on a subset of Imagenet yields significant benefit before proper training.
 - I've given up on training transformer-based models for now since their inherent need for large-data exceeds my current circumstance (unless I want my laptop to run continuously for 300+ hours). This situation may likely change once I've gained permission to use institutioal resources for free. Transformer-based models are still added for educational purposes.
