@@ -146,7 +146,7 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
             scheduler.step()
 
 def main():
-    parser = argparse.ArgumentParser(description='Train a model on CIFAR-10')
+    parser = argparse.ArgumentParser(description='Train a model on Image Classification')
     parser.add_argument('--model', type=str, required=True, choices=['ViT', 
                                                                      'ResNet18', 
                                                                      'ResNet34',
