@@ -36,8 +36,8 @@ class InceptionModuleA(nn.Module):
 
         self.conv_branch_1 = nn.Sequential(*[nn.Conv2d(input_channels, 64, kernel_size=1, stride=1, padding=0)])
 
-        self.conv_branch_2 = nn.Sequential(*[nn.MaxPool2d(kernel_size=3, stride=2, padding=2),
-                                             nn.Conv2d(input_channels, 32, kernel_size=1, stride=1, padding=0)])
+        self.conv_branch_2 = nn.Sequential(*[nn.MaxPool2d(kernel_size=3, stride=1, padding=1),
+                                             nn.Conv2d(input_channels, 64, kernel_size=1, stride=1, padding=0)])
         
         self.conv_branch_3 = nn.Sequential(*[nn.Conv2d(input_channels, 48, kernel_size=1, stride=1, padding=0), 
                                              nn.Conv2d(48, 64, kernel_size=3, stride=1, padding=1)])
@@ -93,10 +93,11 @@ class InceptionModuleC(nn.Module):
 
         self.conv_branch_2 = nn.Conv2d(input_channels, 384, kernel_size=1, stride=1, padding=0)
         self.conv_branch_2_a = nn.Conv2d(384, 384, kernel_size=(1, 3), stride=1, padding=(0, 1))
-        self.conv_branch_2_b = nn.Conv2d(384, 384, kernel_size=(3, 1), stride=1, padding=(3, 0))
+        self.conv_branch_2_b = nn.Conv2d(384, 384, kernel_size=(3, 1), stride=1, padding=(1, 0))
 
         self.conv_branch_3 = nn.Sequential(*[nn.Conv2d(input_channels, 448, kernel_size=1, stride=1, padding=0), 
                                              nn.Conv2d(448, 384, kernel_size=3, stride=1, padding=1)])
+        
         self.conv_branch_3_a = nn.Conv2d(384, 384, kernel_size=(1, 3), stride=1, padding=(0, 1))
         self.conv_branch_3_b = nn.Conv2d(384, 384, kernel_size=(3, 1), stride=1, padding=(1, 0))
 
@@ -106,11 +107,11 @@ class InceptionModuleC(nn.Module):
     def forward(self, x): 
         conv1 = self.conv_branch_1(x)
         conv2 = self.conv_branch_2(x)
-        conv2a = self.conv_branch_2_a(x)
-        conv2b = self.conv_branch_2_b(x)
+        conv2a = self.conv_branch_2_a(conv2)
+        conv2b = self.conv_branch_2_b(conv2)
         conv3 = self.conv_branch_3(x)
-        conv3a = self.conv_branch_3_a(x)
-        conv3b = self.conv_branch_3_b(x)
+        conv3a = self.conv_branch_3_a(conv3)
+        conv3b = self.conv_branch_3_b(conv3)
         conv4 = self.conv_branch_4(x)
 
         output = torch.cat([conv1, conv2a, conv2b, conv3a, conv3b, conv4], dim=1)
