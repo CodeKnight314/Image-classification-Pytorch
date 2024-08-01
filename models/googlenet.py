@@ -18,15 +18,15 @@ class Stem(nn.Module):
         self.activation = nn.ReLU(inplace=True)
 
     def forward(self, x): 
-        x = self.activation(self.conv1(x))
-        x = self.activation(self.conv2(x))
-        x = self.activation(self.conv3(x))
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
 
         x = self.maxpool(x)
 
-        x = self.activation(self.conv4(x))
-        x = self.activation(self.conv5(x))
-        x = self.activation(self.conv6(x))
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
 
         return x 
     
