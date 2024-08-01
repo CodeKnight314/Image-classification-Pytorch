@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, CvT, MobileNet, Squeezenet
+from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -53,6 +53,9 @@ def load_model(args, model_config, logger):
     elif args.model == "Squeezenetv3": 
         model = Squeezenet.get_SqueezenetV3(num_classes=configs.num_class)
         logger.write("[INFO] Squeezenetv3 loaded with defined parameters")
+    elif args.model == "InceptionNetv3": 
+        model = googlenet.get_InceptionNetV3(num_classes=configs.num_class)
+        logger.write("[INFO] InceptionNetv3 loaded with defined parameters")
 
     # Weights loading
     if args.model_save_path:
@@ -154,7 +157,8 @@ def main():
                                                                      'CvT-21',
                                                                      'CvT-24',
                                                                      'MobileNet',
-                                                                     'Squeezenetv3'], help='Model name')
+                                                                     'Squeezenetv3',
+                                                                     'InceptionNetv3'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
