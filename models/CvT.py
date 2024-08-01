@@ -129,11 +129,10 @@ class CvT(nn.Module):
         
         return x
 
-def get_CVT13(num_classes : int, device : str = "cuda"): 
-    return CvT(3, channels=[64, 192, 384], head=[1, 3, 6], num_layers=[1, 2, 10], num_classes=num_classes).to(device)
+def get_CVT13(num_classes : int): 
+    return CvT(3, channels=[64, 192, 384], head=[1, 3, 6], num_layers=[1, 2, 10], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_CVT21(num_classes : int, device : str = "cuda"): 
-    return CvT(3, channels=[64, 192, 384], head=[1, 3, 6], num_layers=[1, 4, 16], num_classes=num_classes).to(device)
-
-def get_CVTW24(num_classes : int, device : str = "cuda"): 
-    return CvT(3, channels=[192, 768, 1024], head=[3, 12, 16], num_layers=[2, 2, 20], num_classes=num_classes).to(device)
+def get_CVT21(num_classes : int): 
+    return CvT(3, channels=[64, 192, 384], head=[1, 3, 6], num_layers=[1, 4, 16], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
+def get_CVTW24(num_classes : int): 
+    return CvT(3, channels=[192, 768, 1024], head=[3, 12, 16], num_layers=[2, 2, 20], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
