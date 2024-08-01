@@ -83,20 +83,20 @@ class ResNet(nn.Module):
 
         return logits
     
-def get_ResNet18(num_classes: int = 10, device : str = "cuda") -> ResNet: 
+def get_ResNet18(num_classes: int = 10) -> ResNet: 
     """
     Helper function for getting ResNet18
 
     Returns:
         ResNet: ResNet model with four layers with two blocks each at 64, 128, 256, 512 channels, respectively.
     """
-    return ResNet(channels=[64, 128, 256, 512], num_layers=[2, 2, 2, 2], num_classes=num_classes).to(device)
+    return ResNet(channels=[64, 128, 256, 512], num_layers=[2, 2, 2, 2], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_ResNet34(num_classes: int = 10, device : str = "cuda") -> ResNet:
+def get_ResNet34(num_classes: int = 10) -> ResNet:
     """
     Helper function for getting ResNet34
 
     Returns: 
         ResNet: ResNet model with four layers with 3, 4, 6, 3 blocks at 64, 128, 256, 512 channels, respectively.
     """
-    return ResNet(channels=[64, 128, 256, 512], num_layers=[3, 4, 6, 3], num_classes=num_classes).to(device)
+    return ResNet(channels=[64, 128, 256, 512], num_layers=[3, 4, 6, 3], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
