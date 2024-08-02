@@ -18,7 +18,10 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | VGG16         |                      N/A                      |                      N/A                      |                      N/A                   |
 | VGG19         |                      N/A                      |                      N/A                      |                      N/A                   |
 | EfficientNet  |                      N/A                      |                      N/A                      |                      N/A                   |
-| DenseNet      |                      N/A                      |                      N/A                      |                      N/A                   |
+| DenseNet121   |                      N/A                      |                      N/A                      |                      N/A                   |
+| DenseNet169   |                      N/A                      |                      N/A                      |                      N/A                   |
+| DenseNet201   |                      N/A                      |                      N/A                      |                      N/A                   |
+| DenseNet264   |                      N/A                      |                      N/A                      |                      N/A                   |
 | CaiT          |                      N/A                      |                      N/A                      |                      N/A                   |
 | ConvMixer     |                      N/A                      |                      N/A                      |                      N/A                   |
 | CoAtNet       |                      N/A                      |                      N/A                      |                      N/A                   |
