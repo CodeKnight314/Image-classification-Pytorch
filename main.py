@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet, VGG
+from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet, VGG, DenseNet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -62,6 +62,18 @@ def load_model(args, model_config, logger):
     elif args.model == "VGG19": 
         model = VGG.get_VGG19(num_classes=configs.num_class)
         logger.write("[INFO] VGG19 loaded with defined parameters")
+    elif args.model == "DenseNet121": 
+        model = DenseNet.get_DenseNet121(num_classes=configs.num_class)
+        logger.write("[INFO] DenseNet121 loaded with defined parameters")
+    elif args.model == "DesNet169": 
+        model = DenseNet.get_DenseNet169(num_classes=configs.num_class)
+        logger.write("[INFO] DenseNet169 loaded with defined parameters")
+    elif args.model == "DenseNet201": 
+        model = DenseNet.get_DenseNet201(num_classes=configs.num_class)
+        logger.write("[INFO] DenseNet201 loaded with defined parameters")
+    elif args.model == "DenseNet264": 
+        model = DenseNet.get_DenseNet264(num_classes=configs.num_class)
+        logger.write("[INFO] DenseNet264 loaded with defined parameters")
 
     # Weights loading
     if args.model_save_path:
@@ -166,7 +178,11 @@ def main():
                                                                      'Squeezenetv3',
                                                                      'InceptionNetv3',
                                                                      'VGG16',
-                                                                     'VGG19'], help='Model name')
+                                                                     'VGG19',
+                                                                     'DenseNet121',
+                                                                     'DenseNet169',
+                                                                     'DenseNet201',
+                                                                     'DenseNet264'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
