@@ -110,14 +110,26 @@ class DenseNet(nn.Module):
         x = self.classifier(x)
         return x
     
-def get_DenseNet121(num_classes: int) -> DenseNet:
+def get_DenseNet121(num_classes: int):
+    """
+    Helper function for defining DenseNet121
+    """
     return DenseNet(num_initial_features=64, num_blocks=[6, 12, 24, 16], growth_rate=32, bn_size=4, num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_DenseNet169(num_classes: int) -> DenseNet:
+def get_DenseNet169(num_classes: int):
+    """
+    Helper function for defining DenseNet169
+    """
     return DenseNet(num_initial_features=64, num_blocks=[6, 12, 32, 32], growth_rate=32, bn_size=4, num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_DenseNet201(num_classes: int) -> DenseNet:
+def get_DenseNet201(num_classes: int):
+    """
+    Helper function for defining DenseNet201
+    """
     return DenseNet(num_initial_features=64, num_blocks=[6, 12, 48, 32], growth_rate=32, bn_size=4, num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_DenseNet264(num_classes: int) -> DenseNet:
+def get_DenseNet264(num_classes: int):
+    """
+    Helper function for defining DenseNet264
+    """
     return DenseNet(num_initial_features=64, num_blocks=[6, 12, 64, 48], growth_rate=32, bn_size=4, num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
