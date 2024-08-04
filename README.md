@@ -25,6 +25,8 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | CaiT          |                      N/A                      |                      N/A                      |                      N/A                   |
 | ConvMixer     |                      N/A                      |                      N/A                      |                      N/A                   |
 | CoAtNet       |                      N/A                      |                      N/A                      |                      N/A                   |
+| CvT           |                      N/A                      |                      N/A                      |                      N/A                   |
+
 ## Special note
 - While most models in this repository can be directly trained on image classification datasets, pretraining even on a subset of Imagenet yields significant benefit before proper training.
 - I've given up on training transformer-based models for now since their inherent need for large-data exceeds my current circumstance (unless I want my laptop to run continuously for 300+ hours). This situation may likely change once I've gained permission to use institutioal resources for free. Transformer-based models are still added for educational purposes.
