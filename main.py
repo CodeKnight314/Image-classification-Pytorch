@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet, VGG, DenseNet, EfficientNet
+from model_loader import load_model_class
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -19,64 +19,22 @@ def load_config(config_file):
     return config
 
 def load_model(args, model_config, logger):
-    # Model selection
+    model_class = load_model_class(args.model)
     if args.model == "ViT":
-        model = ViT.get_ViT(input_dim=(3, configs.img_height, configs.img_width),
-                        patch_size=model_config.get("patch_size"), 
-                        layers=model_config.get("layers"), 
-                        d_model=model_config.get("d_model"), 
-                        head=model_config.get("head"), 
-                        num_classes=configs.num_class)
+        model = model_class(input_dim=(3, configs.img_height, configs.img_width),
+                            patch_size=model_config.get("patch_size"), 
+                            layers=model_config.get("layers"), 
+                            d_model=model_config.get("d_model"), 
+                            head=model_config.get("head"), 
+                            num_classes=configs.num_class)
         logger.write("[INFO] ViT Model loaded with the following attributes:")
         logger.write(f"[INFO] * Patch size: {model.patch_size}.")
         logger.write(f"[INFO] * Number of layers: {model.layers}.")
         logger.write(f"[INFO] * Model dimension: {model.d_model}.")
         logger.write(f"[INFO] * Number of attention heads: {model.head}.")
-    elif args.model == "ResNet18":
-        model = ResNet.get_ResNet18(num_classes=configs.num_class)
-        logger.write("[INFO] ResNet18 Model loaded with defined parameters")
-    elif args.model == "ResNet34":
-        model = ResNet.get_ResNet34(num_classes=configs.num_class)
-        logger.write("[INFO] ResNet34 Model loaded with defined parameters")
-    elif args.model == "CvT-13": 
-        model = CvT.get_CVT13(num_classes=configs.num_class)
-        logger.write("[INFO] CvT-13 Model loaded with defined parameters")
-    elif args.model == "CvT-21": 
-        model = CvT.get_CVT21(num_classes=configs.num_class)
-        logger.write("[INFO] CvT-21 Model loaded with defined parameters")
-    elif args.model == "CvT-24":
-        model = CvT.get_CVTW24(num_classes=configs.num_class)
-        logger.write("[INFO] CvT-24 Model loaded with defined parameters")
-    elif args.model == "MobileNet":
-        model = MobileNet.get_MobileNet(num_of_classes=configs.num_class)
-        logger.write("[INFO] MobileNet loaded with defined parameters.")
-    elif args.model == "Squeezenetv3": 
-        model = Squeezenet.get_SqueezenetV3(num_classes=configs.num_class)
-        logger.write("[INFO] Squeezenetv3 loaded with defined parameters")
-    elif args.model == "InceptionNetv3": 
-        model = googlenet.get_InceptionNetV3(num_classes=configs.num_class)
-        logger.write("[INFO] InceptionNetv3 loaded with defined parameters")
-    elif args.model == "VGG16": 
-        model = VGG.get_VGG16(num_classes=configs.num_class)
-        logger.write("[INFO] VGG16 loaded with defined parameters")
-    elif args.model == "VGG19": 
-        model = VGG.get_VGG19(num_classes=configs.num_class)
-        logger.write("[INFO] VGG19 loaded with defined parameters")
-    elif args.model == "DenseNet121": 
-        model = DenseNet.get_DenseNet121(num_classes=configs.num_class)
-        logger.write("[INFO] DenseNet121 loaded with defined parameters")
-    elif args.model == "DesNet169": 
-        model = DenseNet.get_DenseNet169(num_classes=configs.num_class)
-        logger.write("[INFO] DenseNet169 loaded with defined parameters")
-    elif args.model == "DenseNet201": 
-        model = DenseNet.get_DenseNet201(num_classes=configs.num_class)
-        logger.write("[INFO] DenseNet201 loaded with defined parameters")
-    elif args.model == "DenseNet264": 
-        model = DenseNet.get_DenseNet264(num_classes=configs.num_class)
-        logger.write("[INFO] DenseNet264 loaded with defined parameters")
-    elif args.model == "EfficientNetV2":
-        model = EfficientNet.get_EfficientNetV2(num_classes=configs.num_class)
-        logger.write("[INFO] EfficientNetV2 loaded with defined parameters")
+    else:
+        model = model_class(num_classes=configs.num_class)
+        logger.write(f"[INFO] {args.model} Model loaded with defined parameters")
 
     # Weights loading
     if args.model_save_path:
