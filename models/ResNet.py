@@ -83,7 +83,7 @@ class ResNet(nn.Module):
 
         return logits
     
-def get_ResNet18(num_classes: int = 10) -> ResNet: 
+def get_ResNet18(num_classes: int = 10): 
     """
     Helper function for getting ResNet18
 
@@ -92,7 +92,7 @@ def get_ResNet18(num_classes: int = 10) -> ResNet:
     """
     return ResNet(channels=[64, 128, 256, 512], num_layers=[2, 2, 2, 2], num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_ResNet34(num_classes: int = 10) -> ResNet:
+def get_ResNet34(num_classes: int = 10):
     """
     Helper function for getting ResNet34
 

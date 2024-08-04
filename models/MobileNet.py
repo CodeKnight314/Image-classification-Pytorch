@@ -60,9 +60,8 @@ class MobileNet(nn.Module):
         x = self.classifier_head(x)
         return x
     
-def get_MobileNet(num_of_classes : int, 
-                  device : str = "cuda" if torch.cuda.is_available() else "cpu"): 
+def get_MobileNet(num_of_classes : int): 
     """
     Helper Function to get Mobilenet with defined parameters.
     """
-    return MobileNet(3, num_of_class=num_of_classes).to(device)
+    return MobileNet(3, num_of_class=num_of_classes).to("cuda" if torch.cuda.is_available() else "cpu")
