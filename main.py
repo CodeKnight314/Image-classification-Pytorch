@@ -1,5 +1,5 @@
 import argparse
-from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet, VGG, DenseNet
+from models import ResNet, ViT, CvT, MobileNet, Squeezenet, googlenet, VGG, DenseNet, EfficientNet
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
 import torch
@@ -74,6 +74,9 @@ def load_model(args, model_config, logger):
     elif args.model == "DenseNet264": 
         model = DenseNet.get_DenseNet264(num_classes=configs.num_class)
         logger.write("[INFO] DenseNet264 loaded with defined parameters")
+    elif args.model == "EfficientNetV2":
+        model = EfficientNet.get_EfficientNetV2(num_classes=configs.num_class)
+        logger.write("[INFO] EfficientNetV2 loaded with defined parameters")
 
     # Weights loading
     if args.model_save_path:
@@ -182,7 +185,8 @@ def main():
                                                                      'DenseNet121',
                                                                      'DenseNet169',
                                                                      'DenseNet201',
-                                                                     'DenseNet264'], help='Model name')
+                                                                     'DenseNet264',
+                                                                     'EfficientNetV2'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
