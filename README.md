@@ -17,7 +17,7 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | InceptionNetV3|                      N/A                      |                      N/A                      |                      N/A                   |
 | VGG16         |                      N/A                      |                      N/A                      |                      N/A                   |
 | VGG19         |                      N/A                      |                      N/A                      |                      N/A                   |
-| EfficientNet  |                      N/A                      |                      N/A                      |                      N/A                   |
+| EfficientNetV2|                      N/A                      |                      N/A                      |                      N/A                   |
 | DenseNet121   |                      N/A                      |                      N/A                      |                      N/A                   |
 | DenseNet169   |                      N/A                      |                      N/A                      |                      N/A                   |
 | DenseNet201   |                      N/A                      |                      N/A                      |                      N/A                   |
