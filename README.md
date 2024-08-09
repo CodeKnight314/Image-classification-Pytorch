@@ -14,12 +14,12 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | ResNet34      |                80.1%/80.3%/80.1%              |                94.5%/94.5%/94.5%               |               98.0%/98.0%/98.0%             |
 | MobileNet V.1 |                72.1%/72.3%/72.1%              |                92.2%/92.2%/92.2%               |               97.0%/97.0%/97.0%             |
 | SqueezeNet V.3|                74.6%/74.9%/74.5%              |               78.3%/78.1%/78.3%                |               97.4%/97.4%/97.3%             |
-| InceptionNetV3|                      N/A                      |                      N/A                      |                      N/A                   |
+| InceptionNetV3|                82.4%/82.6%/82.5%              |                      N/A                      |                      N/A                   |
 | VGG16         |                      N/A                      |                      N/A                      |                      N/A                   |
 | VGG19         |                      N/A                      |                      N/A                      |                      N/A                   |
-| EfficientNetV2|                      N/A                      |                      N/A                      |                      N/A                   |
-| DenseNet121   |                      N/A                      |                      N/A                      |                      N/A                   |
-| DenseNet169   |                      N/A                      |                      N/A                      |                      N/A                   |
+| EfficientNetV2|                76.0%/77.0%/76.0%              |                      N/A                      |                      N/A                   |
+| DenseNet121   |                75.1%/76.4%/75.1%              |                      N/A                      |                      N/A                   |
+| DenseNet169   |                70.5%/74.1%/70.5%              |                      N/A                      |                      N/A                   |
 | DenseNet201   |                      N/A                      |                      N/A                      |                      N/A                   |
 | DenseNet264   |                      N/A                      |                      N/A                      |                      N/A                   |
 | CaiT          |                      N/A                      |                      N/A                      |                      N/A                   |
