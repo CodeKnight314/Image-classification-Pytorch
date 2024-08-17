@@ -2,6 +2,7 @@ import argparse
 from model_loader import load_model_class
 from dataset import load_dataset
 from utils.log_writer import LOGWRITER
+from utils.early_stop import EarlyStopMechanism
 import torch
 import torch.optim as opt
 from tqdm import tqdm
@@ -53,9 +54,9 @@ def load_model(args, model_config, logger):
 
     return model
 
-def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss_fn, epochs, warmup, device='cuda'):
-    best_loss = float('inf')
-    model.to(device)
+def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss_fn, epochs, warmup, device='cuda'):    
+    # Early Stopping Mechanism
+    es_mech = EarlyStopMechanism(metric_threshold=0.015, mode='min', grace_threshold=10, save_path=configs.save_pth)
 
     for epoch in range(epochs):
 
@@ -91,7 +92,7 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
                 all_labels.extend(labels.cpu().numpy())
                 all_preds.extend(preds.cpu().numpy())
         
-        # Data and variable preparations
+        # Data and variable preparations for validation calculation
         all_labels = np.array(all_labels)
         all_preds = np.array(all_preds)
         
@@ -112,16 +113,16 @@ def classification(model, optimizer, scheduler, train_dl, valid_dl, logger, loss
         
         avg_train_loss = total_train_loss / len(train_dl)
         avg_val_loss = total_val_loss / len(valid_dl)
-
-        # Saving best model based on avg validation loss
-        if avg_val_loss < best_loss:
-            best_loss = avg_val_loss
-            save_path = os.path.join(configs.save_pth, f'Best_model_{epoch+1}.pth')
-            torch.save(model.state_dict(), save_path)
+        
+        # Saving best model and tracking validation loss for early stopping
+        es_mech.step(model=model, metric=avg_val_loss)    
+        
+        if es_mech.check(): 
+            logger.write("[INFO] Early Stopping Mechanism Engaged. Training procedure ended early.")
+            break;    
 
         # logging results to linked directory
-        logger.log_results(epoch=epoch+1, tr_loss=avg_train_loss, val_loss=avg_val_loss,
-                     precision=precision, recall=recall, accuracy=accuracy)
+        logger.log_results(epoch=epoch+1, tr_loss=avg_train_loss, val_loss=avg_val_loss, precision=precision, recall=recall, accuracy=accuracy)
 
         # Scheduler Stepping once warmup phase ends
         if epoch > warmup:
