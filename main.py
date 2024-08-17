@@ -196,7 +196,7 @@ def main():
     logger = LOGWRITER(output_directory=configs.log_output_dir, total_epochs=model_config.get('epochs'))
     logger.write(f"[INFO] Log writer loaded and binded to {configs.log_output_dir}")
     logger.write(f"[INFO] Total epochs: {model_config.get('epochs')}")
-    logger.write(f"[INFO] Warm Up Phase: {model_config.get('warm_up_epochs')} epochs")
+    logger.write(f"[INFO] Warm Up Phase: {model_config.get('warmup')} epochs")
 
     # TensorBoard Writer Initialization
     writer = SummaryWriter(log_dir=configs.log_output_dir)
