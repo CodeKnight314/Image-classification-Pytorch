@@ -48,7 +48,8 @@ class MobileNet(nn.Module):
         self.classifier_head = nn.Sequential(
             nn.Linear(1024, 512), 
             nn.ReLU(), 
-            nn.Linear(512, num_of_class)
+            nn.Linear(512, num_of_class),
+            nn.Softmax()
         )
         
     def forward(self, x): 

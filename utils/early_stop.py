@@ -34,12 +34,10 @@ class EarlyStopMechanism:
 
         if self.mode == 'min':
             relative_change = (self.best_metric - metric) / self.best_metric
-            improve_condition = relative_change >= self.metric_threshold
         else:
             relative_change = (metric - self.best_metric) / self.best_metric
-            improve_condition = relative_change >= self.metric_threshold
-
-        if improve_condition:
+            
+        if self.best_metric > metric:
             self.best_metric = metric
             self.best_iteration = self.current_iteration
             self.save_model(model)
