@@ -97,7 +97,8 @@ class DenseNet(nn.Module):
         
         self.classifier = nn.Sequential(
             nn.Linear(num_features, num_classes), 
-            nn.Dropout(0.2)
+            nn.Dropout(0.2),
+            nn.Softmax()
         )
     
     def forward(self, x): 
