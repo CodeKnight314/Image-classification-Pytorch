@@ -56,7 +56,8 @@ class VGG16(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, num_classes)
+            nn.Linear(4096, num_classes),
+            nn.Softmax()
         )
 
     def forward(self, x):
@@ -122,7 +123,8 @@ class VGG19(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, num_classes)
+            nn.Linear(4096, num_classes),
+            nn.Softmax()
         )
 
     def forward(self, x):

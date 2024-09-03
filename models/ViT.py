@@ -170,7 +170,8 @@ class ViT(nn.Module):
 
         self.classifier_head = nn.Sequential(*[nn.LayerNorm(self.d_model),
                                                nn.Linear(self.d_model, num_classes),
-                                               nn.Dropout(self.dropout)])
+                                               nn.Dropout(self.dropout),
+                                               nn.Softmax()])
 
         self._initialize_weights()
 
