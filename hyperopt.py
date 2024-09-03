@@ -12,8 +12,8 @@ import argparse
 from model_loader import load_model_class
 import configs
 
-def load_model(args):
-    model_class = load_model_class(args.model)
+def load_model(model_class):
+    model_class = load_model_class(model_class)
     model = model_class(num_classes=configs.num_class)
     return model
 
@@ -112,14 +112,8 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    model = load_model(args.model)
     train_dataloader = load_dataset(root_dir=args.root_dir, mode = "train")
     valid_dataloader = load_dataset(root_dir=args.root_dir, mode = "test")
+    model = load_model(args.model)
     best_params = optimize_hyperparameters(model, train_dataloader, valid_dataloader, n_trials=50)
     print("Best Hyperparameters:", best_params)
-    
-    
-    
-    
-    
-
