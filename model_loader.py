@@ -9,7 +9,7 @@ MODEL_MAPPING = {
     'CvT-24': 'CvT.get_CVTW24',
     'MobileNet': 'MobileNet.get_MobileNet',
     'Squeezenetv3': 'Squeezenet.get_SqueezenetV3',
-    'InceptionNetv3': 'googlenet.get_InceptionNetV3',
+    'InceptionNetv3': 'InceptionNet.get_InceptionNetV3',
     'VGG16': 'VGG.get_VGG16',
     'VGG19': 'VGG.get_VGG19',
     'DenseNet121': 'DenseNet.get_DenseNet121',
