@@ -126,7 +126,6 @@ class CvT(nn.Module):
         x = self.pool(x)
         x = torch.flatten(x, 1)
         x = self.fc(x)
-        x = torch.softmax(x, dim=1)
         
         return x
 

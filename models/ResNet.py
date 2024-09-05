@@ -73,8 +73,7 @@ class ResNet(nn.Module):
         self.classifier_head = nn.Sequential(nn.AdaptiveAvgPool2d((1,1)),
                                             nn.Flatten(), 
                                             nn.Linear(channels[-1], num_classes), 
-                                            nn.Dropout(0.1), 
-                                            nn.Softmax())
+                                            nn.Dropout(0.1))
 
     def forward(self, x : torch.Tensor) -> torch.Tensor: 
         first_conv = self.input_conv(x)
