@@ -122,8 +122,7 @@ class EfficientNetV2(nn.Module):
             nn.ReLU6(inplace=True),
             nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
-            nn.Linear(1280, num_classes),
-            nn.Softmax()
+            nn.Linear(1280, num_classes)
         )
 
     def forward(self, x):
