@@ -56,7 +56,6 @@ class SqueezeNetV3(nn.Module):
         x = self.final_conv(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        x = torch.softmax(x, 1)
         return x
 
 def get_SqueezenetV3(input_channels : int = 3, num_classes : int = 10):

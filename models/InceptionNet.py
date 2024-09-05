@@ -48,7 +48,6 @@ class AuxClassifer(nn.Module):
         x = x.view(x.size(), -1)
         x = self.classifer(x)
         x = self.dropout(x)
-        x = torch.softmax(x, dim=1)
         return x
     
 class ConvBlock(nn.Module): 
@@ -229,7 +228,6 @@ class InceptionNetV3(nn.Module):
         x = torch.flatten(x, 1)
         x = self.dropout(x)
         x = self.fc(x)
-        x = torch.softmax(x, dim=1)
         return x
     
 def get_InceptionNetV3(num_classes : int): 
