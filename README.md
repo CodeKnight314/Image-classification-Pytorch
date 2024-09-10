@@ -10,23 +10,23 @@ If you have any suggestions, feel free to email me: richardgtang@gmail.com
 Note: All pretrained models are done on ImageNet100 due to resource constraints with stored default configs. Download link of ImageNet100 dataset can be found on [kaggle](https://www.kaggle.com/datasets/wilyzh/imagenet100)
 
 ## Results
-| Model         | ImageNet100 (Accuracy/Precision/Recall)       | CIFAR-10 (Accuracy/Precision/Recall)          | MNIST (Accuracy/Precision/Recall)           |
-|---------------|:---------------------------------------------:|:---------------------------------------------:|:-------------------------------------------:|
-| ResNet18      |                78.9%/79.1%/78.9%              |                92.6%/92.6%/92.6%               |               97.0%/97.0%/97.0%             |
-| ResNet34      |                80.1%/80.3%/80.1%              |                94.5%/94.5%/94.5%               |               98.0%/98.0%/98.0%             |
-| MobileNet V.1 |                72.1%/72.3%/72.1%              |                92.2%/92.2%/92.2%               |               97.0%/97.0%/97.0%             |
-| SqueezeNet V.3|                74.6%/74.9%/74.5%              |               78.3%/78.1%/78.3%                |               97.4%/97.4%/97.3%             |
-| InceptionNetV3|                82.4%/82.6%/82.5%              |                      N/A                      |                      N/A                   |
-| VGG16         |                84.2%/84.8%/84.2%              |                      N/A                      |                      N/A                   |
-| VGG19         |                83.9%/84.5%/83.9%              |                      N/A                      |                      N/A                   |
-| EfficientNetV2|                76.0%/77.0%/76.0%              |                      N/A                      |                      N/A                   |
-| DenseNet121   |                75.1%/76.4%/75.1%              |                      N/A                      |                      N/A                   |
-| DenseNet169   |                75.4%/78.4%/75.4%              |                      N/A                      |                      N/A                   |
-| DenseNet201   |                76.8%/78.6%/76.9%              |                      N/A                      |                      N/A                   |
-| CaiT          |                      N/A                      |                      N/A                      |                      N/A                   |
-| ConvMixer     |                      N/A                      |                      N/A                      |                      N/A                   |
-| CoAtNet       |                      N/A                      |                      N/A                      |                      N/A                   |
-| CvT           |                      N/A                      |                      N/A                      |                      N/A                   |
+| Model         | ImageNet100 (Accuracy/Precision/Recall)       | Param Size        |
+|---------------|:---------------------------------------------:|:-----------------:|
+| ResNet18      |                78.9%/79.1%/78.9%              |       11.7M       |
+| ResNet34      |                80.1%/80.3%/80.1%              |       21.8M       |
+| MobileNet V.1 |                72.1%/72.3%/72.1%              |       4.3M        |
+| SqueezeNet V.3|                74.6%/74.9%/74.5%              |       1.6M        |
+| InceptionNetV3|                82.4%/82.6%/82.5%              |       27.0M       |
+| VGG16         |                84.2%/84.8%/84.2%              |       37.7M       |
+| VGG19         |                83.9%/84.5%/83.9%              |       43.0M       |
+| EfficientNetV2|                76.0%/77.0%/76.0%              |       3.4M        |
+| DenseNet121   |                75.1%/76.4%/75.1%              |       8.0M        |
+| DenseNet169   |                75.4%/78.4%/75.4%              |       14.1M       |
+| DenseNet201   |                76.8%/78.6%/76.9%              |       20.2M       |
+| CaiT          |                      N/A                      |        N/A        |
+| ConvMixer     |                      N/A                      |        N/A        |
+| CoAtNet       |                      N/A                      |        N/A        |
+| CvT           |                      N/A                      |        N/A        |
 
 ## Special note
 - While most models in this repository can be directly trained on image classification datasets, pretraining even on a subset of Imagenet yields significant benefit before proper training.
