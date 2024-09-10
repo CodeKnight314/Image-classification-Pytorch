@@ -7,7 +7,7 @@ All trained and available model weights can be found [here](https://drive.google
 
 If you have any suggestions, feel free to email me: richardgtang@gmail.com
 
-Note: All pretrained models are done on ImageNet100 due to resource constraints with stored default configs. Download link of ImageNet100 dataset can be found here.
+Note: All pretrained models are done on ImageNet100 due to resource constraints with stored default configs. Download link of ImageNet100 dataset can be found on [kaggle](https://www.kaggle.com/datasets/wilyzh/imagenet100)
 
 ## Results
 | Model         | ImageNet100 (Accuracy/Precision/Recall)       | CIFAR-10 (Accuracy/Precision/Recall)          | MNIST (Accuracy/Precision/Recall)           |
