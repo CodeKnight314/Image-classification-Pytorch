@@ -21,9 +21,8 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | VGG19         |                83.9%/84.5%/83.9%              |                      N/A                      |                      N/A                   |
 | EfficientNetV2|                76.0%/77.0%/76.0%              |                      N/A                      |                      N/A                   |
 | DenseNet121   |                75.1%/76.4%/75.1%              |                      N/A                      |                      N/A                   |
-| DenseNet169   |                70.5%/74.1%/70.5%              |                      N/A                      |                      N/A                   |
-| DenseNet201   |                      N/A                      |                      N/A                      |                      N/A                   |
-| DenseNet264   |                      N/A                      |                      N/A                      |                      N/A                   |
+| DenseNet169   |                75.4%/78.4%/75.4%              |                      N/A                      |                      N/A                   |
+| DenseNet201   |                76.8%/78.6%/76.9%              |                      N/A                      |                      N/A                   |
 | CaiT          |                      N/A                      |                      N/A                      |                      N/A                   |
 | ConvMixer     |                      N/A                      |                      N/A                      |                      N/A                   |
 | CoAtNet       |                      N/A                      |                      N/A                      |                      N/A                   |
