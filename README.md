@@ -22,7 +22,7 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | EfficientNetV2|                76.0%/77.0%/76.0%              |       3.4M        |
 | DenseNet121   |                75.1%/76.4%/75.1%              |       8.0M        |
 | DenseNet169   |                75.4%/78.4%/75.4%              |       14.1M       |
-| DenseNet201   |                76.8%/78.6%/76.9%              |       20.2M       |
+| DenseNet201   |                80.8%/81.6%/80.9%              |       20.2M       |
 | CaiT          |                      N/A                      |        N/A        |
 | ConvMixer     |                      N/A                      |        N/A        |
 | CoAtNet       |                      N/A                      |        N/A        |
