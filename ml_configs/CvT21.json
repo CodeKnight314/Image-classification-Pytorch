@@ -3,8 +3,8 @@
     "lr":2e-2, 
     "weight decay":1e-1,
     "scheduler":"CosineAnnealingLR",
-    "t_max":300,
+    "t_max":100,
     "eta_min":1e-6,
-    "epochs":300,
+    "epochs":100,
     "warmup":0
 }
