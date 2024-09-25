@@ -17,6 +17,7 @@ MODEL_MAPPING = {
     'DenseNet201': 'DenseNet.get_DenseNet201',
     'DenseNet264': 'DenseNet.get_DenseNet264',
     'EfficientNetV2': 'EfficientNet.get_EfficientNetV2',
+    'ConvMixer': 'ConvMixer.get_ConvMixer'
 }
 
 def load_model_class(model_name):
