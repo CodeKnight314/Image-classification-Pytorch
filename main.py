@@ -182,7 +182,8 @@ def main():
                                                                      'DenseNet169',
                                                                      'DenseNet201',
                                                                      'DenseNet264',
-                                                                     'EfficientNetV2'], help='Model name')
+                                                                     'EfficientNetV2'
+                                                                     'ConvMixer'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
     parser.add_argument('--root_dir', type=str, required=True, help="Root directory to Dataset. Must contain a train and test folder in root directory.")
