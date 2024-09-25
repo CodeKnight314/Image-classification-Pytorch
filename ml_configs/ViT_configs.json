@@ -7,8 +7,8 @@
     "lr":5e-3, 
     "weight decay":1e-4,
     "scheduler": "CosineAnnealingLR",
-    "epochs": 200,
+    "epochs": 100,
     "warmup": 10,
-    "t_max": 190,
+    "t_max": 100,
     "eta_min": 1e-6
 }
