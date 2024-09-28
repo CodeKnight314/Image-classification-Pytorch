@@ -182,7 +182,7 @@ def main():
                                                                      'DenseNet169',
                                                                      'DenseNet201',
                                                                      'DenseNet264',
-                                                                     'EfficientNetV2'
+                                                                     'EfficientNetV2',
                                                                      'ConvMixer'], help='Model name')
     
     parser.add_argument('--model_save_path', type=str, help='Path to save or load model weights')
