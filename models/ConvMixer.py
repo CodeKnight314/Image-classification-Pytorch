@@ -18,9 +18,9 @@ class PatchEmbeddingConv(nn.Module):
 class ConvMixerModule(nn.Module): 
     def __init__(self, input_channels : int, output_channels : int, kernel_size : int = 3):
         super().__init__() 
-        
+
         self.depth_conv = nn.Sequential(*[
-            nn.Conv2d(input_channels, input_channels, kernel_size=kernel_size, stride=1, padding=1, groups=input_channels),
+            nn.Conv2d(input_channels, input_channels, kernel_size=kernel_size, stride=1, padding=kernel_size//2, groups=input_channels),
             nn.GELU(), 
             nn.BatchNorm2d(input_channels)])
 
@@ -47,7 +47,7 @@ class ConvMixer(nn.Module):
         
         self.avg_pool = nn.AdaptiveAvgPool2d((1,1))
         self.flatten = nn.Flatten()
-        self.classifer = nn.Linear(512, num_classes)
+        self.classifer = nn.Linear(dim, num_classes)
     
     def forward(self, x : torch.Tensor) -> torch.Tensor: 
         x = self.patch_embed(x)
@@ -59,4 +59,3 @@ class ConvMixer(nn.Module):
     
 def get_ConvMixer(num_classes : int = 10): 
     return ConvMixer(input_channels=3, dim=128, kernel_size=9, patch_size=7, depth=4, num_classes=num_classes).to("cuda" if torch.cuda.is_available() else "cpu")
-    
