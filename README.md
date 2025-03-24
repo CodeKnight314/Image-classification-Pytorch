@@ -23,10 +23,6 @@ Note: All pretrained models are done on ImageNet100 due to resource constraints 
 | DenseNet121   |                75.1%/76.4%/75.1%              |       8.0M        |
 | DenseNet169   |                75.4%/78.4%/75.4%              |       14.1M       |
 | DenseNet201   |                80.8%/81.6%/80.9%              |       20.2M       |
-| CaiT          |                      N/A                      |        N/A        |
-| ConvMixer     |                      N/A                      |        N/A        |
-| CoAtNet       |                      N/A                      |        N/A        |
-| CvT           |                      N/A                      |        N/A        |
 
 ## Special note
 - While most models in this repository can be directly trained on image classification datasets, pretraining even on a subset of Imagenet yields significant benefit before proper training.
